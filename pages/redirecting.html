@@ -4,7 +4,7 @@
         <meta charset="UTF-8">
         <meta name="viewport" content="width=device-width, user-scalable=no">
         <meta name="theme-color" content="#ffa500">
-        <title>Link out Loud</title>
+        <title>Link out Loud / Redirecting</title>
         <link href="https://fonts.googleapis.com/css?family=Roboto+Mono:400,700|Damion:400,700" rel="stylesheet">
         <link href="https://cdn.jsdelivr.net/npm/boxicons@1.7.1/css/boxicons.min.css" rel="stylesheet">
         <style>
@@ -58,9 +58,6 @@
                 color: #ffa500;
                 text-decoration: none;
             }
-            .tooltip {
-                padding-bottom: 40px;
-            }
             input[type=text],
             input[type=username],
             input[type=email],
@@ -105,42 +102,6 @@
             button:focus {
                 outline: 0;
             }
-            button.secondary {
-                background-color: #000000;
-                color: #ffff00;
-            }
-            #links {
-                margin-top: 40px;
-            }
-            .message {
-            	color: #ffffff;
-                padding: 10px 20px;
-                border-radius: 10px;
-                margin-bottom: 40px;
-            }
-            .message a {
-            	color: #ffffff;
-            	text-decoration: underline;
-            }
-            .message.error {
-                background-color: red;
-            }
-            .message.success {
-                background-color: green;
-            }
-            form button {
-                margin-left: 0em;
-            }
-            .bx {
-                vertical-align: middle;
-                
-            }
-            .link {
-                margin-left: 40px;
-                margin-right: 40px;
-                margin-bottom: 40px;
-                text-align: center;
-            }
         </style>
     </head>
     <body>
@@ -148,30 +109,10 @@
             <div class="background"></div>
           	<div class="card">
           		<center><h1><a href="https://lol.lc" id="logo">Link out Loud</a></h1></center>
-          		<span id="notif"></span>
-          		<form action="https://lol.lc/api/create.php" method="POST">
-          			<p>Where do you want your link to redirect to?</p>
-          			<input type="text" name="url" placeholder="https://1mb.site">
-          			<p>Custom Link (Optional) lol.lc/</p>
-          			<input type="text" name="link" placeholder="1mbsite">
-          			<center><button type="submit">Create Link</button></center>
-          		</form>
+          		<p>This link wants to redirect you to: <b>!url</b></p>
+          		<p>Do you wish to proceed?</p>
+          		<center><a href="!url"><button type="button">Proceed</button></a></center>
           	</div>
         </main>
-        <script src="https://ajax.googleapis.com/ajax/libs/jquery/3.3.1/jquery.min.js"></script>
-        <script>
-            $(function () {
-                $('form').submit(function () {
-                    $.post($(this).attr('action'), $(this).serialize(), function (json) {
-                        if (json.error != false) {
-                            $('#notif').html('<div class="message error">Error: ' + json.error + '</div>');
-                        } else {
-                        	$('#notif').html('<div class="message success">Link created successfully! Your link is: <a href="https://lol.lc/' + json.data + '" target="_blank">https://lol.lc/' + json.data + '</a></div>');
-                        }
-                    }, 'json');
-                    return false;
-                });
-            });
-        </script>
     </body>
 </html>

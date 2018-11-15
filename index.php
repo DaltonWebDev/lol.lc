@@ -6,7 +6,11 @@ if ($link === "") {
 	if (file_exists("api/links/$link.json")) {
 		$json = json_decode(file_get_contents("api/links/$link.json"), true);
 		$url = $json["url"];
-		header("Location: $url");
+		echo str_replace(
+			array("!url"),
+			array($url),
+			file_get_contents("pages/redirecting.html")
+		);
 	} else {
 		echo "This Link Doesn't Exist";
 	}
