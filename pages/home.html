@@ -23,6 +23,7 @@
                 font-size: 16px;
                 -webkit-text-size-adjust: 100%;
                 -webkit-overflow-scrolling: touch;
+                text-align: center;
             }
             a {
                 color: #ffa500;
@@ -43,7 +44,6 @@
                 -ms-word-break: break-all;
                 word-break: break-all;
                 word-break: break-word;
-                text-align: center;
             }
             .card p {
             	margin-top: 0em;
@@ -79,7 +79,6 @@
                 -moz-appearance: none;
                 appearance: none;
                 margin-bottom: 40px;
-                text-align: center;
             }
             button {
                 border: 0;
@@ -99,15 +98,12 @@
                 -moz-user-select: none;
                 -ms-user-select: none;
                 user-select: none;
-                  display: inline-block;
-                  box-shadow: 0 10px 20px 0 hsla(0, 0%, 0%, 0.2);
+               	display: inline-block;
+                box-shadow: 0 10px 20px 0 hsla(0, 0%, 0%, 0.2);
+                margin-bottom: 40px;
             }
             button:focus {
                 outline: 0;
-            }
-            button.secondary {
-                background-color: #000000;
-                color: #ffff00;
             }
             #links {
                 margin-top: 40px;
@@ -139,7 +135,9 @@
                 margin-left: 40px;
                 margin-right: 40px;
                 margin-bottom: 40px;
-                text-align: center;
+            }
+            footer {
+            	margin: 40px;
             }
         </style>
     </head>
@@ -147,24 +145,44 @@
         <main>
             <div class="background"></div>
           	<div class="card">
-          		<center><h1><a href="https://lol.lc" id="logo">Link out Loud</a></h1></center>
+          		<h1><a href="https://lol.lc" id="logo">Link out Loud</a></h1>
           		<span id="notif"></span>
           		<form action="https://lol.lc/api/create.php" method="POST">
           			<p>Where do you want your link to redirect to?</p>
           			<input type="text" name="url" placeholder="https://1mb.site">
           			<p>Custom Link (Optional) lol.lc/</p>
           			<input type="text" name="link" placeholder="1mbsite">
-          			<center><button type="submit">Create Link</button></center>
+          			<button type="submit">Create Link</button>
+          			<p><i>LOL.LC logs your IP address whenever you create a link, and reserves the right to delete your link(s) and/or ban you if you abuse this service.</i></p>
           		</form>
           	</div>
         </main>
+        <footer>
+        	<p><a href="https://twitter.com/DaltonEdwards" target="_blank">@DaltonEdwards</a> © 2018 – <a href="https://gist.github.com/DaltonWebDev/4315ad1d3552ff31e9e4322ecb6950d3" target="_blank">API</a> / <a href="https://github.com/DaltonWebDev/lol.lc" target="_blank">Source Code</a> / Proudly hosted with <a href="https://nodehost.me/daltonedwards" target="_blank">NodeHost</a></p>
+        	<p>There is !links links!</p>
+        </footer>
         <script src="https://ajax.googleapis.com/ajax/libs/jquery/3.3.1/jquery.min.js"></script>
         <script>
             $(function () {
                 $('form').submit(function () {
                     $.post($(this).attr('action'), $(this).serialize(), function (json) {
                         if (json.error != false) {
-                            $('#notif').html('<div class="message error">Error: ' + json.error + '</div>');
+                        	if (json.error === 'URL_MISSING') {
+                        		var message = 'Please enter a URL!';
+                        	} else if (json.error === 'URL_INVALID') {
+                        		var message = 'Please enter a valid URL (Don\'t forget http:// or https://).';
+                        	} else if (json.error === 'LINK_INVALID') {
+                        		var message = 'Links can only contain letters and numbers.';
+                        	} else if (json.error === 'LINK_RESERVED') {
+                        		var message = 'You aren\'t allowed to create this link because it\'s been reserved.';
+                        	} else if (json.error === 'LINK_LONG') {
+                        		var message = 'Links cannot exceed 20 characters in length.';
+                        	} else if (json.error === 'LINK_EXISTS') {
+                        		var message = 'This link already exists! Please pick another one or leave it blank to have one randomly generated.';
+                        	} else {
+                        		// Follow @DaltonEdwards on Twitter lol ;)
+                        	}
+                            $('#notif').html('<div class="message error">' + message + '</div>');
                         } else {
                         	$('#notif').html('<div class="message success">Link created successfully! Your link is: <a href="https://lol.lc/' + json.data + '" target="_blank">https://lol.lc/' + json.data + '</a></div>');
                         }

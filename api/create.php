@@ -1,4 +1,13 @@
 <?php
+$reservedLinks = [
+	"api"
+];
+if (!file_exists("links")) {
+    mkdir("links", 0777, true);
+}
+if (!file_exists("links/.htaccess")) {
+	file_put_contents("links/.htaccess", "Deny from all");
+}
 header("Access-Control-Allow-Origin: *");
 header("Access-Control-Allow-Methods: GET,POST,OPTIONS,DELETE,PUT");
 header("Access-Control-Allow-Headers: Content-Type");
@@ -13,6 +22,8 @@ if ($url === false) {
 	$error = "URL_INVALID";
 } else if ($link !== false && !ctype_alnum($link)) {
 	$error = "LINK_INVALID";
+} else if ($link !== false && in_array($link, $reservedLinks)) {
+	$error = "LINK_RESERVED";
 } else if ($link !== false && strlen($link) > 20) {
 	$error = "LINK_LONG";
 } else if ($link !== false && file_exists("links/$link.json")) {
@@ -24,8 +35,10 @@ if ($url === false) {
 			$link = bin2hex(random_bytes(3));
 		}
 	}
+	$ip = $_SERVER["REMOTE_ADDR"];
 	$linkArray = [
 		"time" => time(),
+		"ip" => $ip,
 		"url" => $url
 	];
 	file_put_contents("links/$link.json", json_encode($linkArray, JSON_UNESCAPED_SLASHES));
